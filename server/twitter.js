@@ -18,15 +18,22 @@ const client = new Twit({
     access_token_secret:  'SUquQt3XC2ve3IIa8JbwMa4bsRCpZSJuCVKYAXLUTDBBT'
 });
 
-const limit = 5;
+const limit = 10;
 
 /**
  * Makes a Twitter API Resquets to fetch all tweets acording query parameter.
  * @param   {String} (r) query - query
  * @returns {Promise} result
  */
-const search = (query) => {
-    return client.get('search/tweets', { q: query,  count: limit});
+const search = (query, _geocode) => {    
+    // Searches for Tweets
+    // https://developer.twitter.com/en/docs/tweets/search/guides/standard-operators
+    return client.get('search/tweets', { 
+        q: query, 
+        count: limit,
+        geocode: _geocode,
+        result_type: 'recent'
+    });
 }
 
 /**
@@ -35,8 +42,8 @@ const search = (query) => {
  * @param   {String} (o) urlmedia -   Url of a image/video
  * @returns {Promise} result
  */
-const create = (comment, urlmedia) => {
-    return client.post('statuses/update', { status: `#NowPlaying ${comment} ${urlmedia}` });
+const create = (params) => {
+    return client.post('statuses/update', params);
 }
 
 

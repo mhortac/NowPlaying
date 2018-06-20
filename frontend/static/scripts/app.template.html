@@ -8,13 +8,16 @@
             </div>
             
             <div class="search ">
-                <input id="newpost" type="text">
-                <button class="btntwt" aria-placeholder="New Tweet"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+                <input id="newpost" type="text"  ng-model="$ctrl.mytweet" placeholder="New Tweet">
+                <button class="btntwt"                   
+                    ng-click="$ctrl.newtweet($ctrl.mytweet)">
+                    <i class="fa fa-paper-plane" aria-hidden="true"></i>
+                </button>
             </div>
     </div>
     <div class="body">
         <!-- Note: Tweet IDs should be represented as strings in order to maintain precision -->
-        <div ng-repeat="tweet in $ctrl.collection track by $index">
+        <div ng-repeat="tweet in $ctrl.collection | orderBy : 'created_at' track by $index">
             <twitter-widget twitter-widget-id="tweet.id_str" class="twtwidget"></twitter-widget>
         </div>
     </div>

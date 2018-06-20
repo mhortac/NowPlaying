@@ -37,15 +37,83 @@
         
         // Where tweets will be stored
         $this.collection = [];
+        $this.geocode = null;
+        /**
+         * Makes a request to create a new tweet
+         * @param {String} comment Text you want to post/share.
+         */
+        $this.newtweet = function (text) {
 
-        //  lifecycle hooks.
-        //  Component initialized.
-        $this.$onInit = function() {
-            $http.get(`${Apihost}/searchtweets`)
-            .then((result) => {
-                $this.collection = result.data.data.statuses
-                console.log($this.collection);                
+            if (!text) {
+                window.alert('A tweet text is required');
+                return;
+            }
+
+            $http.post(`${Apihost}/newpost`, {
+                comment: text,
+                lng: $this.geocode[1],
+                lat: $this.geocode[0],
             })
+            
+            
+            .then((result) => {
+                
+                // Lets reset input text.
+                $this.mytweet = null;
+
+                //  Fetchs the latest 5 tweets under the #nowplaying hashtag
+                $this.fetch();
+            })
+        }
+
+        /**
+         * Makes a request to fetch tweet under the #nowplaying hashtag
+         */
+        $this.fetch = function () {
+
+            let param = ($this.geocode) ? `?geocode=${$this.geocode}` : null;
+
+            $http.get(`${Apihost}/searchtweets${param}`)
+
+            .then((result) => {
+
+                $this.collection = result.data.data.statuses;             
+            })
+        }
+       
+        /**
+         * lifecycle hooks.
+         * Component initialized.
+         */
+        $this.$onInit = function() {
+
+            //  The geolocation API is published through the `navigator.geolocation` object.
+            if ("geolocation" in navigator) {
+
+                // geolocation is available 
+                navigator.geolocation.getCurrentPosition((position) => {
+
+                    //  The parameter value is specified by 
+                    //  "latitude,longitude,radius", 
+                    //  where radius units must be specified 
+                    //  as either ” mi ” (miles) or ” km ” (kilometers). 
+                    $this.geocode = [
+                        position.coords.latitude,
+                        position.coords.longitude,
+                        '200km'
+                    ];
+                   
+                    //  Fetchs the latest 5 tweets under the #nowplaying hashtag
+                    $this.fetch();
+                    
+                });
+            } else {
+                // geolocation IS NOT available
+                window.alert("Geolocation is not supported by your browser");
+
+                //  Fetchs the latest 5 tweets under the #nowplaying hashtag
+                $this.fetch();
+            }            
         };
        
     }
