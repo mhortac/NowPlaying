@@ -17,7 +17,7 @@
     </div>
     <div class="body">
         <!-- Note: Tweet IDs should be represented as strings in order to maintain precision -->
-        <div ng-repeat="tweet in $ctrl.collection | orderBy : 'created_at' track by $index">
+        <div ng-repeat="tweet in $ctrl.collection | orderBy : '-created_at' track by $index">
             <twitter-widget twitter-widget-id="tweet.id_str" class="twtwidget"></twitter-widget>
         </div>
     </div>

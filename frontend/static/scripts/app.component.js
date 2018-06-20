@@ -28,9 +28,9 @@
     // `$inject` Array of the strings that represent 
     //  names of services to be injected into the function.
 
-    AppController.inject = ['$http', 'Apihost'];
+    AppController.inject = ['$http', 'Apihost', '$timeout'];
 
-    function AppController($http, Apihost) {
+    function AppController($http, Apihost, $timeout) {
 
         // Custom $scope.
         let $this = this;
@@ -61,8 +61,11 @@
                 // Lets reset input text.
                 $this.mytweet = null;
 
-                //  Fetchs the latest 5 tweets under the #nowplaying hashtag
-                $this.fetch();
+                $timeout(function () {
+                    //  Fetchs the latest 5 tweets under the #nowplaying hashtag
+                    $this.fetch();
+                }, 1500);
+                
             })
         }
 
