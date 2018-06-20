@@ -43,7 +43,7 @@
         $this.$onInit = function() {
             $http.get(`${Apihost}/searchtweets`)
             .then((result) => {
-                $this.collection.push(result.data.data.statuses);
+                $this.collection = result.data.data.statuses
                 console.log($this.collection);                
             })
         };
