@@ -28,18 +28,24 @@
     // `$inject` Array of the strings that represent 
     //  names of services to be injected into the function.
 
-    AppController.inject = [];
+    AppController.inject = ['$http', 'Apihost'];
 
-    function AppController($scope) {
+    function AppController($http, Apihost) {
 
         // Custom $scope.
         let $this = this;
         
-        
+        // Where tweets will be stored
+        $this.collection = [];
+
         //  lifecycle hooks.
         //  Component initialized.
         $this.$onInit = function() {
-
+            $http.get(`${Apihost}/searchtweets`)
+            .then((result) => {
+                $this.collection.push(result.data.data.statuses);
+                console.log($this.collection);                
+            })
         };
        
     }

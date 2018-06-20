@@ -1,0 +1,84 @@
+
+htnl, body{
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    font-family: Roboto,'Helvetica Neue',Arial,sans-serif;
+}
+.content{
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 auto;
+    width: 100%;
+    min-width: 100%;
+    background: #f5f5f5;
+}
+
+.header{
+    flex-direction: column;
+    box-sizing: border-box;
+    display: flex;
+    max-width: 100%;
+    place-content: center;
+    align-items: center;
+
+    flex: 1 0 auto;
+    height: 360px;
+    max-height: 360px;
+    background: #1a237e;
+    background: linear-gradient(to right,#0e2a3b 0,#34306b 100%);
+}
+.body{
+    max-width: 960px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.title{
+    color: #fff;
+    font-size: 48px;
+    font-weight: 400;
+    letter-spacing: .01em;
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 16px;
+    margin: .67em 0;
+}
+.subtitle{
+    font-size: 16px;
+    color: rgba(255,255,255,.75);
+    max-width: 480px;
+    text-align: center;
+    font-weight: 300;
+    letter-spacing: .075em;
+    margin: 0;
+}
+
+#newpost {
+    flex: 1 1 0%;
+    box-sizing: border-box;
+    height: 56px;
+    width: 500px;
+    padding-left: 16px;
+    color: rgba(0,0,0,.54);
+    border: none;
+    outline: 0;
+}
+.header-text{
+    margin-bottom: 32px!important;
+}
+
+.twitter-tweet.twitter-tweet-rendered{
+    width: 523px !important;
+} 
+
+twitterwidget, .tweet-InformationCircle-widgetParentet {
+    margin: 0 auto !important;
+}
+.btntwt{
+    width: 56px;
+    height: 56px;
+    background: #1da1f2;
+    border: 0;
+    color: white;
+}
