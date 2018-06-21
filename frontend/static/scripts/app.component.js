@@ -71,8 +71,6 @@
                 
                 // Lets reset input text.
                 $this.mytweet = null;
-
-                console.log(result.data.data);
                 
                 $this.collection.push(result.data.data);
                 
@@ -106,6 +104,7 @@
                     $this.collection.shift();
                 }
                 
+                // Adds tweet to the collection
                 result.data.data.statuses.forEach(element => {
                     $this.collection.unshift(element);
                 });                
@@ -114,7 +113,9 @@
         }
        
 
-
+        /**
+         * Called by infinitive scrolling to fetch more tweets.
+         */
         $this.moretweets = function () {
             
             // This block is to avoid unnecessary request at the same time.

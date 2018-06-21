@@ -36,10 +36,12 @@ router.get('/twtapi/searchtweets', (req, res) => {
   })
 
   .then((result) => {
+    console.log('Success');  
     res.json(result)
   })
 
-  .catch((error) => {  
+  .catch((error) => {
+    console.log('Error: ', error);   
     res.json(error)
   })
 });
@@ -60,6 +62,7 @@ router.post('/twtapi/newpost', (req, res) => {
     res.json({ok: false, msg: 'Error: [comment] parameter is required' })
   }
   
+  // Tell to twitter, post this tweet.
   twitter.post({ 
     status: `${req.body.comment} #NowPlaying #nowplaying`,
     long: req.body.lng,
@@ -72,9 +75,9 @@ router.post('/twtapi/newpost', (req, res) => {
   })
 
   .catch((error) => {
-    console.log('Error:');   
+    console.log('Error: ', error);   
     res.json(error)
-  })
+  });
 });
 
 module.exports = router;
