@@ -1,6 +1,10 @@
-var express   = require('express');
-var router    = express.Router();
-var twitter   = require('../twitter');
+const express   = require('express');
+const router    = express.Router();
+const twitter   = require('../twitter');
+
+const LIMIT = 5;
+const QUERY = '%23NowPlaying+%23nowplaying';
+
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -20,9 +24,16 @@ router.get('/twtapi', function(req, res, next) {
  */
 router.get('/twtapi/searchtweets', (req, res) => {
    
-  console.log(req.query);
-  
-  twitter.search('%23NowPlaying+%23nowplaying+', req.query.geocode || null )
+  // Searches for Tweets
+  // https://developer.twitter.com/en/docs/tweets/search/guides/standard-operators
+
+  twitter.search({ 
+    count: LIMIT,
+    q: QUERY, 
+    geocode: req.query.geocode || null,
+    max_id:  req.query.max_id  || null,
+    result_type: 'recent'
+  })
 
   .then((result) => {
     res.json(result)
@@ -32,6 +43,8 @@ router.get('/twtapi/searchtweets', (req, res) => {
     res.json(error)
   })
 });
+
+
 
 /**
  * Route:   /twtapi/newpost

@@ -28,27 +28,38 @@
     // `$inject` Array of the strings that represent 
     //  names of services to be injected into the function.
 
-    AppController.inject = ['$http', 'Apihost', '$timeout'];
+    AppController.inject = ['$http', 'Apihost', '$timeout', '$window'];
 
-    function AppController($http, Apihost, $timeout) {
+    function AppController($http, Apihost, $timeout, $window) {
 
         // Custom $scope.
-        let $this = this;
-        
+        let $this = this;        
+
         // Where tweets will be stored
         $this.collection = [];
+
+        // Used to storage geocode for tweet search
         $this.geocode = null;
+
+        // Used to be a time reference 
+        $this.auxtime = new Date();
+
+
+
+
         /**
          * Makes a request to create a new tweet
          * @param {String} comment Text you want to post/share.
          */
         $this.newtweet = function (text) {
 
+            // Break if input is empty.
             if (!text) {
                 window.alert('A tweet text is required');
                 return;
             }
 
+            // Makes a request for a new post.
             $http.post(`${Apihost}/newpost`, {
                 comment: text,
                 lng: $this.geocode[1],
@@ -61,29 +72,68 @@
                 // Lets reset input text.
                 $this.mytweet = null;
 
-                $timeout(function () {
-                    //  Fetchs the latest 5 tweets under the #nowplaying hashtag
-                    $this.fetch();
-                }, 1500);
+                console.log(result.data.data);
+                
+                $this.collection.push(result.data.data);
                 
             })
         }
 
+
+
         /**
          * Makes a request to fetch tweet under the #nowplaying hashtag
          */
-        $this.fetch = function () {
+        $this.fetch = function (max_id) {
 
-            let param = ($this.geocode) ? `?geocode=${$this.geocode}` : null;
+            // default empty object for parameters
+            let param = {};
+            
+            // If parameters are available ...
+            if ($this.geocode)  param['geocode']  = $this.geocode;
+            if (max_id)         param['max_id']   = max_id;
 
-            $http.get(`${Apihost}/searchtweets${param}`)
+
+            $http.get(`${Apihost}/searchtweets${$this.toQueryString(param)}`)
 
             .then((result) => {
+                
+                // To prevent duplicity of last elemtent
+                if ($this.collection.length > 0) {
 
-                $this.collection = result.data.data.statuses;             
+                    // If there is element in the array,
+                    // remove the last on because will be repeated
+                    $this.collection.shift();
+                }
+                
+                result.data.data.statuses.forEach(element => {
+                    $this.collection.unshift(element);
+                });                
+
             })
         }
        
+
+
+        $this.moretweets = function () {
+            
+            // This block is to avoid unnecessary request at the same time.
+            // Let's wait at least 5 seg
+            let time = new Date();
+            let diff = time.getTime() - $this.auxtime.getTime();
+            if ( (diff / 1000) < 5 ) return;
+
+            //  Gets last element
+            let last =  $this.collection[0];
+
+            console.log(last.text);
+            
+            $this.fetch(last.id);
+
+            $this.auxtime = time;
+        }
+
+
         /**
          * lifecycle hooks.
          * Component initialized.
@@ -116,9 +166,34 @@
 
                 //  Fetchs the latest 5 tweets under the #nowplaying hashtag
                 $this.fetch();
-            }            
+            }
         };
        
+        /**
+        * This function parse an object a pass to query string in uri format
+        * @param {Object} obj  Parameters to pass
+        * @returns {String} query string
+        **/
+       
+        $this.toQueryString = function(object) {
+            if (object) {
+                let parts = [];
+                for (const index in object) {
+                    if (object.hasOwnProperty(index)) {
+
+                        parts.push(encodeURIComponent(index) + "=" + encodeURIComponent(object[index]));
+                    }
+                }
+
+                if (parts.length > 0) {                    
+                    return "?" + parts.join("&");
+                } else {
+                    return "";
+                }
+            } else {
+                return "";
+            }
+        }
     }
 })();
 

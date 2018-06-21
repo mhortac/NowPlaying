@@ -3,6 +3,7 @@ htnl, body{
     margin: 0;
     padding: 0;
     width: 100%;
+    overflow: hidden;
     font-family: Roboto,'Helvetica Neue',Arial,sans-serif;
 }
 .content{
@@ -12,6 +13,8 @@ htnl, body{
     width: 100%;
     min-width: 100%;
     background: #f5f5f5;
+    overflow: scroll;
+    height: -webkit-fill-available;
 }
 
 .header{
